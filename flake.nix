@@ -62,7 +62,7 @@
           inherit (pkgs.lib) optionalAttrs mapAttrs;
           callPackage = pkgs.newScope {
             inherit self;
-            inherit (self) outputs;
+            inherit (self) inputs outputs;
             lib = mkLib pkgs;
           };
         in
