@@ -3,6 +3,10 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     flake-utils.url = "github:numtide/flake-utils";
     flake-compat = {
       url = "github:edolstra/flake-compat";
@@ -69,13 +73,14 @@
         optionalAttrs isLinux (mapAttrs (n: v: callPackage v { }) (self.lib.rakeLeaves ./tests));
 
       nixosModules = self.lib.rakeLeaves ./modules/nixos;
+      homeModules = self.lib.rakeLeaves ./modules/home;
     in
     {
       lib = import ./lib { lib = flake-utils.lib // nixpkgs.lib; };
 
       overlay = final: prev: mkPackages prev;
       overlays.default = self.overlay;
-      inherit nixosModules;
+      inherit nixosModules homeModules;
 
       hydraJobs = {
         checks = { inherit (self.checks) x86_64-linux; };
