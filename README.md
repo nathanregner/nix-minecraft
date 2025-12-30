@@ -52,6 +52,24 @@ In your system configuration:
 }
 ```
 
+### Home Manager
+
+In your home configuration:
+
+```nix
+{ inputs, ... }: # Make sure the flake inputs are in your system's config
+{
+  imports = [ inputs.nix-minecraft.homeModules.minecraft-servers ];
+}
+```
+
+**NOTE:** You probably want to enable [user lingering](https://www.freedesktop.org/software/systemd/man/latest/loginctl.html?#enable-linger%20USER%E2%80%A6)
+when using the home-manager module.
+
+Otherwise, the server won't start on until the user logs in and may be stopped
+on logout. On NixOS, this can be accomplished by setting
+`users.users.<name>.linger = true`. Otherwise, you can use `loginctl enable-linger`.
+
 ## Examples
 
 See the [examples directory](./examples/).
